@@ -93,6 +93,41 @@ $ codeclimate-test-reporter --file ./alternate/location/.coverage
 Submitting payload to https://codeclimate.com... done!
 ```
 
+### Tox 
+
+If you happen to be using TOX for your tests, you will need to pass your CI's Environemntal Variables to the environment you wish to report from, otherwise Codeclimate will not be able to tell which branch your commit belongs to.
+
+Your `tox.ini` should then look a little bit like this:
+
+```ini
+[testenv:py35]
+commands =
+    py.test --cov=your_package tests/
+    codeclimate-test-reporter --file .coverage
+passenv =
+    CODECLIMATE_REPO_TOKEN
+    TRAVIS_BRANCH
+    TRAVIS_JOB_ID
+    TRAVIS_PULL_REQUEST
+    CI_NAME
+```
+
+The CI specific variables are:
+
+* Travis-CI: CI_NAME, TRAVIS_BRANCH, TRAVIS_JOB_ID, TRAVIS_PULL_REQUEST
+* CircleCI: CI_NAME, CIRCLE_BRANCH, CIRCLE_BUILD_NUM, CIRCLE_SHA1
+* Semaphore: CI_NAME, BRANCH_NAME, SEMAPHORE_BUILD_NUMBER
+* Jenkins: CI_NAME, BUILD_NUMBER, BUILD_URL, GIT_BRANCH, GIT_COMMIT
+* Tddium: CI_NAME, TDDIUM_SESSION_ID, TDDIUM_TID
+* Wercker: CI_NAME, WERCKER_BUILD_ID, WERCKER_BUILD_URL, WERCKER_GIT_BRANCH, WERCKER_GIT_COMMIT
+* Appveyor: CI_NAME, APPVEYOR_BUILD_ID, APPVEYOR_API_URL, APPVEYOR_REPO_BRANCH, APPVEYOR_REPO_COMMIT, APPVEYOR_PULL_REQUEST_NUMBER
+* Drone: CI_NAME, CI_BUILD_NUMBER, CI_BUILD_URL, CI_BRANCH, CI_COMMIT, CI_PULL_REQUEST
+* Codeship: CI_NAME, CI_BUILD_NUMBER, CI_BUILD_URL, CI_BRANCH, CI_COMMIT_ID
+* Vexor: CI_NAME, CI_BUILD_NUMBER, CI_BUILD_URL, CI_BRANCH, CI_BUILD_SHA, CI_PULL_REQUEST_ID
+* Buildkite: CI_NAME, BUILDKITE_JOB_ID, BUILDKITE_BUILD_URL, BUILDKITE_BRANCH, BUILDKITE_COMMIT
+* Gitlab-CI: CI_NAME, CI_BUILD_ID, CI_BUILD_REF_NAME, CI_BUILD_REF
+
+
 ## Installation
 
 You can install the codeclimate-test-reporter using pip:
